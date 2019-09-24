@@ -42,7 +42,7 @@ $item->quantity = $_POST['unit'];
 $item->unit_price = $_POST['price'];
 
 //back urls
-$backURL = 'mp-ecommerce-php.me/respuesta.php';
+$backURL = 'https://lmicheli-mp-ecommerce-php.herokuapp.com/respuesta.php';
 $preference->back_urls = array(
     'success' => $backURL . '?respuesta=success',
    'failure' => $backURL . '?respuesta=failure',
