@@ -48,6 +48,7 @@ $preference->back_urls = array(
    'failure' => $backURL . '?respuesta=failure',
    'pending' => $backURL . '?respuesta=pending',
 );
+$preference->notification_url = "https://lmicheli-mp-ecommerce-php.herokuapp.com/notificaciones.php";
 $preference->auto_return = 'approved';
 $preference->external_reference = 'ABCD1234';
 $preference->items = array($item);
