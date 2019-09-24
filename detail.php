@@ -2,16 +2,57 @@
 // SDK de Mercado Pago
 require __DIR__ .  '/vendor/autoload.php';
 // Agrega credenciales
-MercadoPago\SDK::setAccessToken('TEST-6183636195876064-092323-7a603a524da91cf6a9e7ae03dd159444-473657358');
+//die(print_r($_POST));
+MercadoPago\SDK::setAccessToken('APP_USR-6317427424180639-090914-5c508e1b02a34fcce879a999574cf5c9-469485398');
 // Crea un objeto de preferencia
 $preference = new MercadoPago\Preference();
+$paymentMethods = new MercadoPago\PaymentMethod();
+$payer = new MercadoPago\Payer();
+
+//Creo el payer
+$payer->name = 'Lalo';
+$payer->surname = 'Landa';
+$payer->identification->type = 'DNI';
+$payer->identification->number = '22333444';
+$payer->email = 'test_user_63274575@testuser.com';
+$payer->phone->area_code = '011';
+$payer->phone->number = '2222-3333';
+$payer->address->street_name = 'Falsa';
+$payer->address->street_number = '123';
+$payer->address->zip_code = '1111';
+
+//metodos de pago
+$paymentMethods->installments = 6;
+$paymentMethods->excluded_payment_methods = array(
+        array('id'=> 'amex')
+);
+$paymentMethods->excluded_payment_types = array(
+    array('id'=> 'atm')
+);
+
+
 
 // Crea un ítem en la preferencia
 $item = new MercadoPago\Item();
+$item->id = 1234;
+$item->description = 'Dispositivo móvil de Tienda e-commerce. El mejor';
 $item->title = $_POST['title'];
+$item->picture_url = $_POST['img'];
 $item->quantity = $_POST['unit'];
 $item->unit_price = $_POST['price'];
+
+//back urls
+$backURL = 'mp-ecommerce-php.me/respuesta.php';
+$preference->back_urls = array(
+    'success' => $backURL . '?respuesta=success',
+   'failure' => $backURL . '?respuesta=failure',
+   'pending' => $backURL . '?respuesta=pending',
+);
+$preference->auto_return = 'approved';
+$preference->external_reference = 'ABCD1234';
 $preference->items = array($item);
+$preference->payer = $payer;
+$preference->payment_methods = $paymentMethods;
 $preference->save();
 ?>
 <!DOCTYPE html>
@@ -146,7 +187,7 @@ $preference->save();
                                             <?php echo  $_POST['unit'] ?>
                                         </h3>
                                     </div>
-                                    <form action="/procesar-pago" method="POST">
+                                    <form action="/procesar-pago.php" method="POST">
                                         <script
                                                 src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
                                                 data-preference-id="<?php echo $preference->id; ?>">
